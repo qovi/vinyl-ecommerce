@@ -8,9 +8,7 @@ import type { AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = sqliteTableCreator(
-	(name) => `vinyl_${name}`,
-);
+export const createTable = sqliteTableCreator((name) => `vinyl_${name}`);
 
 export const users = createTable("user", (d) => ({
 	id: d
@@ -52,7 +50,7 @@ export const accounts = createTable(
 			columns: [t.provider, t.providerAccountId],
 		}),
 		index("account_user_id_idx").on(t.userId),
-	],
+	]
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -69,7 +67,7 @@ export const sessions = createTable(
 			.references(() => users.id),
 		expires: d.integer({ mode: "timestamp" }).notNull(),
 	}),
-	(t) => [index("session_userId_idx").on(t.userId)],
+	(t) => [index("session_userId_idx").on(t.userId)]
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -83,5 +81,30 @@ export const verificationTokens = createTable(
 		token: d.text({ length: 255 }).notNull(),
 		expires: d.integer({ mode: "timestamp" }).notNull(),
 	}),
-	(t) => [primaryKey({ columns: [t.identifier, t.token] })],
+	(t) => [primaryKey({ columns: [t.identifier, t.token] })]
+);
+
+/**
+ * here we define the actual schema for the database
+ */
+export const record = createTable(
+	"record",
+	(d) => ({
+		id: d
+			.integer({ mode: "number" })
+			.notNull()
+			.primaryKey({ autoIncrement: true }),
+		title: d.text({ length: 255 }).notNull(),
+		artist: d.text({ length: 255 }).notNull(),
+		year: d.integer({ mode: "number" }).notNull(),
+		price: d.integer({ mode: "number" }).notNull(),
+		cover: d.text({ length: 255 }).notNull(),
+		description: d.text({ length: 255 }).notNull(),
+		createdAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+		updatedAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+	}),
+	(t) => [
+		index("record_title_idx").on(t.title),
+		index("record_artist_idx").on(t.artist),
+	]
 );
