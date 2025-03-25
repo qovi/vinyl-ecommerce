@@ -3,6 +3,8 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { TRPCReactProvider } from "@/trpc/react";
 
+import Navbar from "@/components/nav";
+
 export const metadata: Metadata = {
 	title: "Vinyl | Brorbrun's Vinyl Butik",
 	description: "Brorbrun's Vinyl Butik",
@@ -18,6 +20,7 @@ export default function RootLayout({
 		<html lang="da">
 			<body>
 				<TRPCReactProvider>
+					<Navbar />
 					{children}
 				</TRPCReactProvider>
 			</body>
