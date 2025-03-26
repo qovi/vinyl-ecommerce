@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -104,7 +105,17 @@ export default function Navbar() {
                     />
                     <SearchIcon className="absolute left-4 w-4 h-4" />
                 </div>
-            </header>
+
+                <div className="flex items-center justify-between absolute top-1/10 left-0 right-0 lg:h-full h-1/2">
+                    <Image
+                        src={"/vinyl-background.jpg"}
+                        alt="vinyl"
+                        fill
+                        className="w-full h-1/4 object-cover"
+                        priority
+                    />
+                </div>
+            </header>  
         </>
     );
 }
