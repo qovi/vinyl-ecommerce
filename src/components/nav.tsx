@@ -10,13 +10,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <>
+            <header className="flex flex-col w-full">
             <div className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setMenuOpen(false)} />
             
             <div className={`fixed left-0 top-0 h-full w-full md:w-1/3 bg-white z-50 transform transition-transform duration-300 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -47,9 +47,7 @@ export default function Navbar() {
                     </nav>
                 </div>
             </div>
-
-            <header className="flex flex-col w-full">
-                <div className="flex items-center justify-between h-12 border-b border-neutral-950">
+            <div className="flex items-center justify-between h-12 border-b border-neutral-950">
                     <div 
                         onClick={() => setMenuOpen(!menuOpen)}
                         className="flex items-center border-r border-neutral-950 h-full px-4 hover:bg-neutral-100 cursor-pointer"
@@ -104,16 +102,6 @@ export default function Navbar() {
                         className="h-8 w-full px-8 focus:outline-none"
                     />
                     <SearchIcon className="absolute left-4 w-4 h-4" />
-                </div>
-
-                <div className="flex items-center justify-between absolute top-1/10 left-0 right-0 lg:h-full h-1/2">
-                    <Image
-                        src={"/vinyl-background.jpg"}
-                        alt="vinyl"
-                        fill
-                        className="w-full h-1/4 object-cover"
-                        priority
-                    />
                 </div>
             </header>  
         </>
