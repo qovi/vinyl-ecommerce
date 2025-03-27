@@ -41,7 +41,13 @@ export default function Cart() {
   useEffect(() => {
     const handleCartUpdate = (event: CustomEvent) => {
       const newItem = event.detail;
-      setCartItems(prevItems => [...prevItems, newItem]);
+      setCartItems(prevItems => {
+        const itemExists = prevItems.some(item => item.recordId === newItem.recordId);
+        if (itemExists) {
+          return prevItems;
+        }
+        return [...prevItems, newItem];
+      });
     };
 
     window.addEventListener('cartUpdate', handleCartUpdate as EventListener);

@@ -1,10 +1,10 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useTransition, useState } from 'react'
 
 interface AddToCartButtonProps {
   id: number
-  addToCart: (formData: FormData) => Promise<void>
+  addToCart: (formData: FormData) => Promise<{ error?: string; success?: boolean }>
   title: string
   artist: string
   price: number
@@ -13,8 +13,10 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ id, addToCart, title, artist, price, cover }: AddToCartButtonProps) {
   const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | null>(null)
 
-  const handleClick = () => {
+  const handleClick = async () => {
+    setError(null)
     const formData = new FormData()
     formData.append('id', id.toString())
 
@@ -33,18 +35,26 @@ export function AddToCartButton({ id, addToCart, title, artist, price, cover }: 
     })
     window.dispatchEvent(event)
 
-    startTransition(() => {
-      addToCart(formData)
+    startTransition(async () => {
+      const result = await addToCart(formData)
+      if (result.error) {
+        setError(result.error)
+      }
     })
   }
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={isPending}
-      className="bg-blue-700 text-white px-4 py-6 rounded-sm w-1/2 text-center cursor-pointer disabled:opacity-75"
-    >
-      Læg i kurven
-    </button>
+    <div className="flex flex-col gap-2">
+      <button
+        onClick={handleClick}
+        disabled={isPending}
+        className="bg-blue-700 text-white px-4 py-6 rounded-sm w-1/2 text-center cursor-pointer disabled:opacity-75"
+      >
+        Læg i kurven
+      </button>
+      {error && (
+        <p className="text-red-500 text-sm">{error}</p>
+      )}
+    </div>
   )
 }

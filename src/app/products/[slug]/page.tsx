@@ -31,14 +31,18 @@ async function addToCart(formData: FormData) {
         eq(cart.sessionToken, sessionToken)
     })
 
-    if (!existingItem) {
-      await db.insert(cart).values({
-        recordId: id,
-        sessionToken: sessionToken,
-      })
+    if (existingItem) {
+      return { error: 'Dette produkt er allerede i din indkøbskurv' }
     }
+
+    await db.insert(cart).values({
+      recordId: id,
+      sessionToken: sessionToken,
+    })
+    return { success: true }
   } catch (error) {
     console.error('Failed to add to cart:', error)
+    return { error: 'Der opstod en fejl ved tilføjelse til indkøbskurven' }
   }
 }
 
