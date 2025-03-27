@@ -99,7 +99,7 @@ export const record = createTable(
 		year: d.integer({ mode: "number" }).notNull(),
 		price: d.integer({ mode: "number" }).notNull(),
 		cover: d.text({ length: 255 }).notNull(),
-		description: d.text({ length: 255 }).notNull(),
+		description: d.text({ length: 255 }),
 		createdAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
 		updatedAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
 	}),
