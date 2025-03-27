@@ -36,10 +36,16 @@ export default function Cart() {
     }
 
     fetchCart();
-    
-    const intervalId = setInterval(fetchCart, 10000);
-    
-    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const handleCartUpdate = (event: CustomEvent) => {
+      const newItem = event.detail;
+      setCartItems(prevItems => [...prevItems, newItem]);
+    };
+
+    window.addEventListener('cartUpdate', handleCartUpdate as EventListener);
+    return () => window.removeEventListener('cartUpdate', handleCartUpdate as EventListener);
   }, []);
 
   const removeItem = async (id: number) => {
@@ -47,7 +53,7 @@ export default function Cart() {
       const response = await fetch(`/api/cart?id=${id}`, {
         method: 'DELETE',
       });
-      
+
       if (response.ok) {
         setCartItems(cartItems.filter(item => item.id !== id));
       }
@@ -59,8 +65,8 @@ export default function Cart() {
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div 
-      className="relative w-full h-full flex items-center justify-center cursor-pointer" 
+    <div
+      className="relative w-full h-full flex items-center justify-center cursor-pointer"
       onClick={(e) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
@@ -75,20 +81,20 @@ export default function Cart() {
 
       {isOpen && (
         <>
-          <div 
+          <div
             className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
             onClick={(e) => {
               e.stopPropagation();
               setIsOpen(false);
             }}
           />
-          <div 
+          <div
             className="fixed right-0 top-0 h-full w-full md:w-[450px] dark:bg-neutral-900 bg-white z-50 shadow-lg flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center p-4 border-b dark:border-neutral-800 border-gray-200">
               <h2 className="text-2xl font-bold">DIN INDKØBSKURV</h2>
-              <button 
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsOpen(false);
@@ -113,11 +119,11 @@ export default function Cart() {
                   {cartItems.map((item) => (
                     <div key={item.id} className="p-4 border-b dark:border-neutral-800 border-gray-200 flex">
                       <div className="w-20 h-24 mr-4 border dark:border-neutral-800 border-gray-200">
-                        <Image 
-                          src={item.cover} 
-                          alt={item.title} 
-                          width={80} 
-                          height={96} 
+                        <Image
+                          src={item.cover}
+                          alt={item.title}
+                          width={80}
+                          height={96}
                           className="object-cover w-full h-full"
                         />
                       </div>
@@ -125,9 +131,9 @@ export default function Cart() {
                         <h3 className="font-medium">{item.title}</h3>
                         <h4 className="text-sm">{item.artist}</h4>
                         <p className="mt-2 font-medium">{(item.price * 1.25).toFixed(2)} kr</p>
-                        
+
                         <div className="flex items-center mt-3">
-                          <button 
+                          <button
                             onClick={(e) => {
                               e.stopPropagation();
                               removeItem(item.id);
@@ -148,11 +154,11 @@ export default function Cart() {
                     <span className="text-xl font-medium">{(totalPrice * 1.25).toFixed(2)} kr</span>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-neutral-100 mb-6">Moms inkluderet og fragt beregnet ved afslutning af køb</p>
-                  
+
                   <div className="flex items-center mb-4" onClick={(e) => e.stopPropagation()}>
-                    <input 
-                      type="checkbox" 
-                      id="age-confirmation" 
+                    <input
+                      type="checkbox"
+                      id="age-confirmation"
                       className="mr-2"
                       onChange={(e) => setAgeConfirmed(e.target.checked)}
                     />
@@ -160,9 +166,9 @@ export default function Cart() {
                       Ved at handle i Vinyl Shop, bekræfter du, at du er over 18. Du kan blive bedt om at give ID ved modtagelse af levering.
                     </label>
                   </div>
-                  
+
                   {ageConfirmed ? (
-                    <Link 
+                    <Link
                       href="/checkout"
                       className="block w-full bg-blue-600 dark:bg-blue-700 text-white text-center py-4 hover:bg-blue-700 dark:hover:bg-blue-800"
                       onClick={(e) => e.stopPropagation()}
