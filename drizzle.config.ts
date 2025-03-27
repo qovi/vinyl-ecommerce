@@ -8,5 +8,5 @@ export default {
 	dbCredentials: {
 		url: env.DATABASE_URL,
 	},
-	tablesFilter: ["vinyl-ecommerce_*"],
+	tablesFilter: ["vinyl_*"],
 } satisfies Config;

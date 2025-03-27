@@ -3,13 +3,13 @@
 import { 
     MenuIcon,
     UserRound,
-    ShoppingBag,
     SearchIcon,
     X,
     ChevronRight,
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import Cart from "./cart";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -73,12 +73,9 @@ export default function Navbar() {
                         >
                             <UserRound className="w-5 h-5" />
                         </Link>
-                        <Link 
-                            href="/cart" 
-                            className="h-full flex items-center justify-center px-4 hover:bg-neutral-100"
-                        >
-                            <ShoppingBag className="w-5 h-5" />
-                        </Link>
+                        <div className="h-full w-16 flex items-center justify-center px-4 hover:bg-neutral-100 cursor-pointer">
+                            <Cart />
+                        </div>
                     </div>
                 </div>
                 <nav className="hidden md:grid w-full grid-cols-4 border-b border-neutral-950">

@@ -29,7 +29,7 @@ export default async function Home() {
 						.map((record) => (
 						<Link
 							key={record.id}
-							href={`/record/${record.title.replace(/\s+/g, '-').toLowerCase()}`}
+							href={`/products/${record.id}`}
 							className="flex flex-col border-r border-b border-black"
 						>
 							<div className="aspect-square relative">

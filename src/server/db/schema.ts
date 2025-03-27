@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, primaryKey, sqliteTableCreator } from "drizzle-orm/sqlite-core";
+import { foreignKey, index, primaryKey, sqliteTableCreator } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -57,6 +57,16 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 	user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
+export const verificationTokens = createTable(
+	"verification_token",
+	(d) => ({
+		identifier: d.text({ length: 255 }).notNull(),
+		token: d.text({ length: 255 }).notNull(),
+		expires: d.integer({ mode: "timestamp" }).notNull(),
+	}),
+	(t) => [primaryKey({ columns: [t.identifier, t.token] })]
+);
+
 export const sessions = createTable(
 	"session",
 	(d) => ({
@@ -73,16 +83,6 @@ export const sessions = createTable(
 export const sessionsRelations = relations(sessions, ({ one }) => ({
 	user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
-
-export const verificationTokens = createTable(
-	"verification_token",
-	(d) => ({
-		identifier: d.text({ length: 255 }).notNull(),
-		token: d.text({ length: 255 }).notNull(),
-		expires: d.integer({ mode: "timestamp" }).notNull(),
-	}),
-	(t) => [primaryKey({ columns: [t.identifier, t.token] })]
-);
 
 /**
  * here we define the actual schema for the database
@@ -106,5 +106,31 @@ export const record = createTable(
 	(t) => [
 		index("record_title_idx").on(t.title),
 		index("record_artist_idx").on(t.artist),
+	]
+);
+
+export const cart = createTable(
+	"cart",
+	(d) => ({
+		id: d
+			.integer({ mode: "number" })
+			.notNull()
+			.primaryKey({ autoIncrement: true }),
+		recordId: d
+			.integer({ mode: "number" })
+			.notNull(),
+		createdAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+		updatedAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+		sessionToken: d.text({ length: 255 }).notNull(),
+		expiresAt: d.integer({ mode: "timestamp" })
+			.notNull()
+			.default(sql`(unixepoch() + 604800)`),
+	}),
+	(t) => [
+		index("cart_sessionToken_idx").on(t.sessionToken),
+		foreignKey({
+			columns: [t.recordId],
+			foreignColumns: [record.id]
+		})
 	]
 );
