@@ -19,8 +19,8 @@ export default async function Home() {
 					/>
 				</div>
 
-				<div className="flex items-center justify-center border border-black">
-					<h1 className="text-4xl font-semibold text-black">VINYLS</h1>
+				<div className="flex items-center justify-center border dark:border-neutral-900 border-black">
+					<h1 className="text-4xl font-semibold dark:text-white text-black">VINYLS</h1>
 				</div>
 				
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
@@ -30,7 +30,7 @@ export default async function Home() {
 						<Link
 							key={record.id}
 							href={`/products/${record.id}`}
-							className="flex flex-col border-r border-b border-black"
+							className="flex flex-col border-r border-b dark:border-neutral-900 border-black"
 						>
 							<div className="aspect-square relative">
 								<Image

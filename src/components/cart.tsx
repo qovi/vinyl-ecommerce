@@ -83,17 +83,17 @@ export default function Cart() {
             }}
           />
           <div 
-            className="fixed right-0 top-0 h-full w-full md:w-[450px] bg-white z-50 shadow-lg flex flex-col"
+            className="fixed right-0 top-0 h-full w-full md:w-[450px] dark:bg-neutral-900 bg-white z-50 shadow-lg flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center p-4 border-b border-gray-200">
+            <div className="flex justify-between items-center p-4 border-b dark:border-neutral-800 border-gray-200">
               <h2 className="text-2xl font-bold">DIN INDKØBSKURV</h2>
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsOpen(false);
                 }}
-                className="p-1 hover:bg-gray-100 rounded-full"
+                className="p-1 dark:hover:bg-neutral-800 hover:bg-neutral-100 rounded-full"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -111,8 +111,8 @@ export default function Cart() {
               <>
                 <div className="flex-1 overflow-auto">
                   {cartItems.map((item) => (
-                    <div key={item.id} className="p-4 border-b border-gray-200 flex">
-                      <div className="w-20 h-24 mr-4 border border-gray-200">
+                    <div key={item.id} className="p-4 border-b dark:border-neutral-800 border-gray-200 flex">
+                      <div className="w-20 h-24 mr-4 border dark:border-neutral-800 border-gray-200">
                         <Image 
                           src={item.cover} 
                           alt={item.title} 
@@ -132,7 +132,7 @@ export default function Cart() {
                               e.stopPropagation();
                               removeItem(item.id);
                             }}
-                            className="text-gray-500 hover:text-gray-700"
+                            className="text-gray-500 dark:text-neutral-100 hover:text-gray-700 dark:hover:text-neutral-200"
                           >
                             <Trash2 className="w-5 h-5" />
                           </button>
@@ -142,12 +142,12 @@ export default function Cart() {
                   ))}
                 </div>
 
-                <div className="p-4 border-t border-gray-200">
+                <div className="p-4 border-t dark:border-neutral-800 border-gray-200">
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-xl font-medium">TOTAL</span>
                     <span className="text-xl font-medium">{(totalPrice * 1.25).toFixed(2)} kr</span>
                   </div>
-                  <p className="text-sm text-gray-500 mb-6">Moms inkluderet og fragt beregnet ved afslutning af køb</p>
+                  <p className="text-sm text-gray-500 dark:text-neutral-100 mb-6">Moms inkluderet og fragt beregnet ved afslutning af køb</p>
                   
                   <div className="flex items-center mb-4" onClick={(e) => e.stopPropagation()}>
                     <input 
@@ -164,13 +164,13 @@ export default function Cart() {
                   {ageConfirmed ? (
                     <Link 
                       href="/checkout"
-                      className="block w-full bg-blue-600 text-white text-center py-4 hover:bg-blue-700"
+                      className="block w-full bg-blue-600 dark:bg-blue-700 text-white text-center py-4 hover:bg-blue-700 dark:hover:bg-blue-800"
                       onClick={(e) => e.stopPropagation()}
                     >
                       Afslut køb
                     </Link>
                   ) : (
-                    <div className="block w-full bg-gray-400 text-white text-center py-4 cursor-not-allowed">
+                    <div className="block w-full bg-gray-400 dark:bg-neutral-800 text-white text-center py-4 cursor-not-allowed">
                       Afslut køb
                     </div>
                   )}

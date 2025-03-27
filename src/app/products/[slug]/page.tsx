@@ -61,19 +61,19 @@ export default async function Page({
 
     return (
         <>
-            <div className="bg-neutral-50 w-full h-10 items-center flex px-4 border-b border-black">
+            <div className="dark:bg-neutral-900/40 bg-neutral-50 w-full h-10 items-center flex px-4 border-b border-black dark:border-neutral-800">
                 <Link
                     href={"/"}
-                    className="hover:text-blue-600 text-black/50"
+                    className="hover:text-blue-600 text-black/50 dark:text-neutral-100"
                 >
                     <span className="relative after:absolute after:bg-blue-600 after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:duration-300 after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100">
                         Home
                     </span>
                 </Link>
-                <span className="px-2 text-black/50">/</span>
+                <span className="px-2 text-black/50 dark:text-neutral-100">/</span>
                 <Link
                     href={`/products/${slug}`}
-                    className="hover:text-blue-600 text-black/50"
+                    className="hover:text-blue-600 text-black/50 dark:text-neutral-100"
                 >
                     {records?.title
                         .replace(/-/g, " ")
@@ -83,8 +83,8 @@ export default async function Page({
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-b border-black">
-                <div className="col-span-1 flex items-center justify-center h-full py-8 px-4 md:border-r border-black">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-b border-black dark:border-neutral-800">
+                <div className="col-span-1 flex items-center justify-center h-full py-8 px-4 md:border-r border-black dark:border-neutral-800">
                     <Image
                         src={records?.cover}
                         alt={records?.title}
@@ -95,25 +95,25 @@ export default async function Page({
                 </div>
 
                 <div className="col-span-1 lg:col-span-2">
-                    <div className="flex flex-col border-b border-black py-4 px-4 gap-2 justify-center">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium text-black">{records.title}</h1>
-                        <p className="text-black/50">{records.artist}, {records.year}</p>
+                    <div className="flex flex-col border-b border-black dark:border-neutral-800 py-4 px-4 gap-2 justify-center">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium text-black dark:text-neutral-100">{records.title}</h1>
+                        <p className="text-black/50 dark:text-neutral-100">{records.artist}, {records.year}</p>
                     </div>
-                    <div className="flex flex-col border-b border-black py-4 px-4 gap-2 justify-center">
-                        <h2 className="text-2xl font-medium text-black">{records.price * 1.25} kr</h2>
-                        <p className="text-black/50">Inkl. moms</p>
+                    <div className="flex flex-col border-b border-black dark:border-neutral-800 py-4 px-4 gap-2 justify-center">
+                        <h2 className="text-2xl font-medium text-black dark:text-neutral-100">{records.price * 1.25} kr</h2>
+                        <p className="text-black/50 dark:text-neutral-100">Inkl. moms</p>
                     </div>
-                    <div className="flex flex-col border-b border-black py-4 px-4 gap-2 justify-center">
+                    <div className="flex flex-col border-b border-black dark:border-neutral-800 py-4 px-4 gap-2 justify-center">
                         <AddToCartButton id={records.id} addToCart={addToCart} />
                     </div>
                     <div className="p-4">
-                        <p className="text-black/50">{records.description || "Der er ingen beskrivelse tilgængelig for denne plade."}</p>
+                        <p className="text-black/50 dark:text-neutral-100">{records.description || "Der er ingen beskrivelse tilgængelig for denne plade."}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="flex items-center justify-center border-b border-black py-4">
-                <h2 className="text-2xl font-medium text-black">DU VIL MÅSKE OGSÅ KUNNE LIDE</h2>
+            <div className="flex items-center justify-center border-b border-black dark:border-neutral-800 py-4">
+                <h2 className="text-2xl font-medium text-black dark:text-neutral-100">DU VIL MÅSKE OGSÅ KUNNE LIDE</h2>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
@@ -124,7 +124,7 @@ export default async function Page({
                         <Link
                             key={record.id}
                             href={`/products/${record.id}`}
-                            className="flex flex-col border-r border-b border-black"
+                            className="flex flex-col border-r border-b border-black dark:border-neutral-800"
                         >
                             <div className="aspect-square relative">
                                 <Image
@@ -136,7 +136,7 @@ export default async function Page({
                             </div>
                             <div className="mt-2 p-2">
                                 <h3 className="font-medium">{record.title}</h3>
-                                <p className="text-sm text-gray-600">{record.artist}</p>
+                                <p className="text-sm text-gray-600 dark:text-neutral-100">{record.artist}</p>
                                 <p className="mt-1 font-medium">{record.price * 1.25} kr</p>
                             </div>
                         </Link>
