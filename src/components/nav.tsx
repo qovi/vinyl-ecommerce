@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import Cart from "./cart";
-import { ModeToggle } from "./mode-toggle";
+import { ThemeToggle } from "./theme-toggle";
 import { useTheme } from "next-themes";
 
 export default function Navbar() {
@@ -83,7 +83,7 @@ export default function Navbar() {
                             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                             className="h-full w-16 flex items-center justify-center px-4 dark:hover:bg-neutral-900 hover:bg-neutral-100 cursor-pointer"
                         >
-                            <ModeToggle />
+                            <ThemeToggle />
                         </div>
                     </div>
                 </div>

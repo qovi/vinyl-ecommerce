@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShoppingBag, X, Plus, Minus, Trash2 } from 'lucide-react';
+import { ShoppingBag, X, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -22,20 +22,11 @@ export default function Cart() {
   const [ageConfirmed, setAgeConfirmed] = useState(false);
 
   useEffect(() => {
-    async function fetchCart() {
-      try {
-        const response = await fetch('/api/cart');
-        if (!response.ok) throw new Error('Failed to fetch cart');
-        const data = await response.json();
-        setCartItems(data);
-      } catch (error) {
-        console.error('Error fetching cart:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
     }
-
-    fetchCart();
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -46,7 +37,9 @@ export default function Cart() {
         if (itemExists) {
           return prevItems;
         }
-        return [...prevItems, newItem];
+        const updatedItems = [...prevItems, newItem];
+        localStorage.setItem('cart', JSON.stringify(updatedItems));
+        return updatedItems;
       });
     };
 
@@ -54,18 +47,12 @@ export default function Cart() {
     return () => window.removeEventListener('cartUpdate', handleCartUpdate as EventListener);
   }, []);
 
-  const removeItem = async (id: number) => {
-    try {
-      const response = await fetch(`/api/cart?id=${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        setCartItems(cartItems.filter(item => item.id !== id));
-      }
-    } catch (error) {
-      console.error('Error removing item:', error);
-    }
+  const removeItem = (id: number) => {
+    setCartItems(prevItems => {
+      const updatedItems = prevItems.filter(item => item.id !== id);
+      localStorage.setItem('cart', JSON.stringify(updatedItems));
+      return updatedItems;
+    });
   };
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);

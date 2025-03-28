@@ -108,29 +108,3 @@ export const record = createTable(
 		index("record_artist_idx").on(t.artist),
 	]
 );
-
-export const cart = createTable(
-	"cart",
-	(d) => ({
-		id: d
-			.integer({ mode: "number" })
-			.notNull()
-			.primaryKey({ autoIncrement: true }),
-		recordId: d
-			.integer({ mode: "number" })
-			.notNull(),
-		createdAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
-		updatedAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
-		sessionToken: d.text({ length: 255 }).notNull(),
-		expiresAt: d.integer({ mode: "timestamp" })
-			.notNull()
-			.default(sql`(unixepoch() + 604800)`),
-	}),
-	(t) => [
-		index("cart_sessionToken_idx").on(t.sessionToken),
-		foreignKey({
-			columns: [t.recordId],
-			foreignColumns: [record.id]
-		})
-	]
-);

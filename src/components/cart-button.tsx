@@ -4,22 +4,18 @@ import { useTransition, useState } from 'react'
 
 interface AddToCartButtonProps {
   id: number
-  addToCart: (formData: FormData) => Promise<{ error?: string; success?: boolean }>
   title: string
   artist: string
   price: number
   cover: string
 }
 
-export function AddToCartButton({ id, addToCart, title, artist, price, cover }: AddToCartButtonProps) {
+export function AddToCartButton({ id, title, artist, price, cover }: AddToCartButtonProps) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
   const handleClick = async () => {
     setError(null)
-    const formData = new FormData()
-    formData.append('id', id.toString())
-
     const tempId = Math.floor(Math.random() * 1000000)
 
     const event = new CustomEvent('cartUpdate', {
@@ -35,11 +31,9 @@ export function AddToCartButton({ id, addToCart, title, artist, price, cover }: 
     })
     window.dispatchEvent(event)
 
-    startTransition(async () => {
-      const result = await addToCart(formData)
-      if (result.error) {
-        setError(result.error)
-      }
+    startTransition(() => {
+      // No need for server request anymore
+      setError(null)
     })
   }
 

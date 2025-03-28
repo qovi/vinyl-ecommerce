@@ -1,50 +1,9 @@
 import { AddToCartButton } from "@/components/cart-button"
 import { db } from "@/server/db"
-import { cart, record } from "@/server/db/schema"
+import { record } from "@/server/db/schema"
 import { eq } from "drizzle-orm"
-import { cookies } from "next/headers"
 import Image from "next/image"
 import Link from "next/link"
-import { v4 as uuidv4 } from 'uuid'
-
-async function addToCart(formData: FormData) {
-  "use server"
-  const id = parseInt(formData.get("id") as string)
-
-  const cookieStore = await cookies()
-  let sessionToken = cookieStore.get('cart_session')?.value
-
-  if (!sessionToken) {
-    sessionToken = uuidv4()
-    cookieStore.set('cart_session', sessionToken, {
-      httpOnly: true,
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/'
-    })
-  }
-
-  try {
-    const existingItem = await db.query.cart.findFirst({
-      where: (cart) =>
-        eq(cart.recordId, id) &&
-        eq(cart.sessionToken, sessionToken)
-    })
-
-    if (existingItem) {
-      return { error: 'Dette produkt er allerede i din indkøbskurv' }
-    }
-
-    await db.insert(cart).values({
-      recordId: id,
-      sessionToken: sessionToken,
-    })
-    return { success: true }
-  } catch (error) {
-    console.error('Failed to add to cart:', error)
-    return { error: 'Der opstod en fejl ved tilføjelse til indkøbskurven' }
-  }
-}
 
 export default async function Page({
   params,
@@ -110,7 +69,6 @@ export default async function Page({
           <div className="flex flex-col border-b border-black dark:border-neutral-800 py-4 px-4 gap-2 justify-center">
             <AddToCartButton
               id={records.id}
-              addToCart={addToCart}
               title={records.title}
               artist={records.artist}
               price={records.price}
