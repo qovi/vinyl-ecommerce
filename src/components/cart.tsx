@@ -58,28 +58,24 @@ export default function Cart() {
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div
-      className="relative w-full h-full flex items-center justify-center cursor-pointer"
-      onClick={(e) => {
-        e.stopPropagation();
-        setIsOpen(!isOpen);
-      }}
-    >
-      <ShoppingBag className="w-6 h-6 pointer-events-none" />
-      {cartItems.length > 0 && (
-        <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs absolute top-1 -right-1 pointer-events-none">
-          {cartItems.length}
-        </span>
-      )}
+    <>
+      <div
+        className="relative w-full h-full flex items-center justify-center cursor-pointer px-4"
+        onClick={() => setIsOpen(true)}
+      >
+        <ShoppingBag className="w-6 h-6" />
+        {cartItems.length > 0 && (
+          <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs absolute top-1 right-2">
+            {cartItems.length}
+          </span>
+        )}
+      </div>
 
       {isOpen && (
         <>
           <div
             className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsOpen(false);
-            }}
+            onClick={() => setIsOpen(false)}
           />
           <div
             className="fixed right-0 top-0 h-full w-full md:w-[450px] dark:bg-neutral-900 bg-white z-50 shadow-lg flex flex-col"
@@ -88,10 +84,7 @@ export default function Cart() {
             <div className="flex justify-between items-center p-4 border-b dark:border-neutral-800 border-gray-200">
               <h2 className="text-2xl font-bold">DIN INDKØBSKURV</h2>
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsOpen(false);
-                }}
+                onClick={() => setIsOpen(false)}
                 className="p-1 dark:hover:bg-neutral-800 hover:bg-neutral-100 rounded-full"
               >
                 <X className="w-6 h-6" />
@@ -179,6 +172,6 @@ export default function Cart() {
           </div>
         </>
       )}
-    </div>
+    </>
   );
 }

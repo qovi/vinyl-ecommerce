@@ -76,7 +76,7 @@ export default function Navbar() {
                         >
                             <UserRound className="w-5 h-5" />
                         </Link>
-                        <div className="h-full w-16 flex items-center justify-center border-r dark:border-neutral-800 border-black px-4 dark:hover:bg-neutral-900 hover:bg-neutral-100 cursor-pointer">
+                        <div className="h-full flex items-center justify-center border-r dark:border-neutral-800 border-black dark:hover:bg-neutral-900 hover:bg-neutral-100 cursor-pointer">
                             <Cart />
                         </div>
                         <div 
