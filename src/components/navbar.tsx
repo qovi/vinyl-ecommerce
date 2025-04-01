@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    
     const navLinks = [
         { href: "/", label: "Hjem" },
         { href: "/butik", label: "Butik" },
@@ -17,7 +17,9 @@ export default function Navbar() {
     ];
 
     return (
-        <header className="w-full bg-white border-t">
+        <header className={cn("w-full bg-white border-t", 
+            isMenuOpen && "h-screen fixed inset-0 overflow-hidden z-50"
+        )}>
             <AnimatePresence mode="wait">
                 {isMenuOpen && (
                     <motion.div 
@@ -70,7 +72,7 @@ export default function Navbar() {
                         animate={{ x: 0 }}
                         exit={{ x: "-110%" }}
                         transition={{ type: "spring", damping: 20, stiffness: 100 }}
-                        className="fixed inset-0 bg-white z-50 md:w-1/3 border md:left-5 md:top-5 md:bottom-5 overflow-hidden"
+                        className="fixed inset-0 bg-white z-50 md:w-1/3 border md:left-5 md:top-5 md:bottom-5 overflow-y-auto"
                         id="mobile-menu"
                         role="dialog"
                         aria-modal="true"
