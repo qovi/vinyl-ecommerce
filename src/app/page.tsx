@@ -1,10 +1,9 @@
 import { HydrateClient } from "@/trpc/server";
 
-export default async function Home() {
-	return (
-		<HydrateClient>
-			<main>
-			</main>
-		</HydrateClient>
-	);
+export default function Home() {
+  return (
+    <HydrateClient>
+      <main className="w-screen h-screen p-4 md:p-8 bg-gray-100 text-neutral-900"></main>
+    </HydrateClient>
+  )
 }
