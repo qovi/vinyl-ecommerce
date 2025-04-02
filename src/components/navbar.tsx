@@ -17,9 +17,7 @@ export default function Navbar() {
     ];
 
     return (
-        <header className={cn("w-full bg-white border-t", 
-            isMenuOpen && "h-screen fixed inset-0 overflow-hidden z-50"
-        )}>
+        <header className="w-full bg-white border-t">
             <AnimatePresence mode="wait">
                 {isMenuOpen && (
                     <motion.div 
@@ -72,7 +70,7 @@ export default function Navbar() {
                         animate={{ x: 0 }}
                         exit={{ x: "-110%" }}
                         transition={{ type: "spring", damping: 20, stiffness: 100 }}
-                        className="fixed inset-0 bg-white z-50 md:w-1/3 border md:left-5 md:top-5 md:bottom-5 overflow-y-auto"
+                        className="fixed top-0 left-0 w-full h-full bg-white z-50 md:w-1/3 md:left-5 md:top-5 md:h-[calc(100%-2.5rem)] overflow-y-auto"
                         id="mobile-menu"
                         role="dialog"
                         aria-modal="true"
