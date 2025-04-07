@@ -1,6 +1,7 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { DefaultSession, NextAuthConfig } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import argon2 from "argon2";
 
 import { db } from "@/server/db";
 import {
@@ -9,6 +10,8 @@ import {
 	users,
 	verificationTokens,
 } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -38,7 +41,35 @@ declare module "next-auth" {
  */
 export const authConfig = {
 	providers: [
-		GoogleProvider
+		CredentialsProvider({
+			name: "Credentials",
+			credentials: {
+				email: { label: "Email", type: "email" },
+				password: { label: "Password", type: "password" },
+			},
+
+			async authorize(credentials) {
+				const parsedCredentials = z.object({
+					email: z.string().email(),
+					password: z.string().min(8),
+				}).parse(credentials);
+
+				const user = await db.query.users.findFirst({
+					where: eq(users.email, parsedCredentials.email),
+				});
+
+				if (!user) {
+					throw new Error("User not found");
+				}
+
+				const password = await argon2.verify(user.password, parsedCredentials.password);
+				if (!password) {
+					throw new Error("Invalid password");
+				}
+
+				return user;
+			},
+		}),
 		/**
 		 * ...add more providers here.
 		 *
@@ -63,5 +94,12 @@ export const authConfig = {
 				id: user.id,
 			},
 		}),
+		jwt: ({ token, user }) => {
+			if (user) {
+				token.id = user.id;
+			}
+			return token;
+		},
 	},
+	secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig;
