@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, primaryKey, sqliteTableCreator } from "drizzle-orm/sqlite-core";
+import { index, primaryKey, sqliteTableCreator, uniqueIndex } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -105,4 +105,22 @@ export const verificationTokens = createTable(
 		expires: d.integer({ mode: "timestamp" }).notNull(),
 	}),
 	(t) => [primaryKey({ columns: [t.identifier, t.token] })],
+);
+
+export const vinyls = createTable(
+	"vinyls",
+	(d) => ({
+		id: d.integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+		name: d.text({ length: 256 }).notNull(),
+		image: d.text({ length: 256 }).notNull(),
+		price: d.integer({ mode: "number" }).notNull(),
+		description: d.text({ length: 256 }),
+		tracklist: d.text().default(JSON.stringify([])),
+		createdAt: d.integer({ mode: "timestamp" }).default(sql`(unixepoch())`),
+		updatedAt: d.integer({ mode: "timestamp" }).$onUpdate(() => new Date()),
+	}),
+	(t) => [
+		uniqueIndex("vinyls_name_idx").on(t.name),
+		index("vinyls_id_idx").on(t.id),
+	],
 );

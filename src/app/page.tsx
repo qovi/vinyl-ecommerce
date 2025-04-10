@@ -1,4 +1,5 @@
 import { HydrateClient } from "@/trpc/server";
+import ProductsGrid from "@/components/products";
 import Image from "next/image";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
           height={1000}
           className="w-full h-1/2 md:h-full object-cover"
         />
+        <ProductsGrid />
       </main>
     </HydrateClient>
   )

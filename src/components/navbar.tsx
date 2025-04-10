@@ -33,9 +33,9 @@ export default function Navbar() {
                 )}
             </AnimatePresence>
 
-            <div className="flex justify-between items-center border-b">
+            <div className="flex justify-between items-center border-b md:flex-row-reverse">
                 <button
-                    className="p-4 border-r cursor-pointer hover:bg-gray-100"
+                    className="p-4 border-r cursor-pointer hover:bg-gray-100 md:hidden"
                     aria-label="Åbn menu"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-expanded={isMenuOpen}
@@ -54,7 +54,7 @@ export default function Navbar() {
                 </form>
 
                 <div className="flex items-center">
-                    <Link href={"/cart"} className="p-4 border-l flex items-center justify-center hover:bg-gray-100" aria-label="Indkøbskurv">
+                    <Link href={"/cart"} className="p-4 md:border-r border-l flex items-center justify-center hover:bg-gray-100" aria-label="Indkøbskurv">
                         <ShoppingBag className="h-6 w-6" aria-hidden="true" />
                     </Link>
                 </div>
