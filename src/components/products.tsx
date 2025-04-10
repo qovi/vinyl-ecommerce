@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export default async function ProductsGrid() {
 	const data = await db.select().from(vinyls);
-	console.log(data);
 
 	return (
 		<section className="border-t">
