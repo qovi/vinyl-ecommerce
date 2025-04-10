@@ -185,11 +185,11 @@ export default function Navbar() {
             <nav className="border-b w-full hidden md:block" aria-label="Hovednavigation">
                 <ul className="flex text-center">
                     {navLinks.map((link, index) => (
-                        <li key={link.href} className={cn("flex-1 p-4 hover:bg-gray-100 bg-gray-50", index > 0 && "border-l")}>
-                            <Link href={link.href} className="block">
+                        <Link key={link.href} href={link.href} className="flex-1">
+                            <li className={cn("p-4 hover:bg-gray-100 bg-gray-50", index > 0 && "border-l")}>
                                 {link.label}
-                            </Link>
-                        </li>
+                            </li>
+                        </Link>
                     ))}
                 </ul>
             </nav>
