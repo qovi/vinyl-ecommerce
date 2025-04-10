@@ -7,7 +7,7 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
     images: {
-        domains: ["i.discogs.com"],
+        domains: ["i.discogs.com", "placehold.co"],
         dangerouslyAllowSVG: true,
     },
 }

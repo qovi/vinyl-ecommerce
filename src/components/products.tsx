@@ -27,13 +27,13 @@ export default async function ProductsGrid() {
 									/>
 								</figure>
 							</Link>
-							<div>
+							<div className="p-2">
 								<Link href={`/product/${d.id}`}>
 									<h3 className="text-lg font-bold">
 										{d.name}
 									</h3>
 								</Link>
-								<p className="text-sm">{d.price}</p>
+								<p className="text-sm">{d.price} kr</p>
 							</div>
 						</article>
 					);

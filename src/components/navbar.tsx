@@ -1,13 +1,29 @@
 "use client";
 
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useDebounce } from 'use-debounce';
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import SearchResults from "./searchresults";
+
+type SearchResult = {
+    id: number;
+    name: string;
+    artist: string;
+    image: string;
+    price: number;
+};
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [debouncedQuery] = useDebounce(searchQuery, 300);
+    const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isResultsVisible, setIsResultsVisible] = useState(false);
+    const searchRef = useRef<HTMLDivElement>(null);
 
     const navLinks = [
         { href: "/", label: "Hjem" },
@@ -15,6 +31,43 @@ export default function Navbar() {
         { href: "/om-os", label: "Om os" },
         { href: "/kontakt", label: "Kontakt" },
     ];
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            if (debouncedQuery.length < 2) {
+                setSearchResults([]);
+                return;
+            }
+
+            setIsLoading(true);
+            try {
+                const response = await fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`);
+                const data = await response.json();
+                setSearchResults(data.results);
+                setIsResultsVisible(true);
+            } catch (error) {
+                console.error("Fejl ved søgning:", error);
+                setSearchResults([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchSearchResults();
+    }, [debouncedQuery]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+                setIsResultsVisible(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     return (
         <header className="w-full bg-white border-t">
@@ -44,14 +97,39 @@ export default function Navbar() {
                     <Menu className="h-6 w-6" aria-hidden="true" />
                 </button>
 
-                <form role="search" className="p-4 hidden md:flex flex-1">
-                    <input
-                        type="search"
-                        placeholder="Søg"
-                        className="w-full bg-transparent focus:outline-none"
-                        aria-label="Søg på siden"
-                    />
-                </form>
+                <div ref={searchRef} className="p-4 hidden md:flex flex-1 relative">
+                    <div className="flex w-full items-center">
+                        <Search className="h-5 w-5 text-gray-400 mr-2" />
+                        <input
+                            type="text"
+                            placeholder="Søg efter vinyl eller kunstner"
+                            className="w-full bg-transparent focus:outline-none"
+                            aria-label="Søg på siden"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onFocus={() => {
+                                if (searchResults.length > 0) {
+                                    setIsResultsVisible(true);
+                                }
+                            }}
+                        />
+                        {isLoading && (
+                            <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                                <div className="animate-spin h-4 w-4 border-2 border-gray-500 border-t-transparent rounded-full" />
+                            </div>
+                        )}
+                    </div>
+                    
+                    <AnimatePresence mode="wait">
+                        {isResultsVisible && (
+                            <SearchResults 
+                                results={searchResults} 
+                                isVisible={isResultsVisible} 
+                                onClose={() => setIsResultsVisible(false)} 
+                            />
+                        )}
+                    </AnimatePresence>
+                </div>
 
                 <div className="flex items-center">
                     <Link href={"/cart"} className="p-4 md:border-r border-l flex items-center justify-center hover:bg-gray-100" aria-label="Indkøbskurv">
@@ -107,7 +185,7 @@ export default function Navbar() {
             <nav className="border-b w-full hidden md:block" aria-label="Hovednavigation">
                 <ul className="flex text-center">
                     {navLinks.map((link, index) => (
-                        <li key={link.href} className={cn("flex-1 p-4 hover:bg-gray-100", index > 0 && "border-l")}>
+                        <li key={link.href} className={cn("flex-1 p-4 hover:bg-gray-100 bg-gray-50", index > 0 && "border-l")}>
                             <Link href={link.href} className="block">
                                 {link.label}
                             </Link>
@@ -116,14 +194,39 @@ export default function Navbar() {
                 </ul>
             </nav>
 
-            <form role="search" className="flex-1 p-4 md:hidden border-b">
-                <input
-                    type="search"
-                    placeholder="Søg"
-                    className="w-full bg-transparent focus:outline-none"
-                    aria-label="Søg på siden"
-                />
-            </form>
+            <div ref={searchRef} className="flex-1 p-4 md:hidden border-b relative">
+                <div className="flex w-full items-center">
+                    <Search className="h-5 w-5 text-gray-400 mr-2" />
+                    <input
+                        type="search"
+                        placeholder="Søg efter vinyl eller kunstner"
+                        className="w-full bg-transparent focus:outline-none"
+                        aria-label="Søg på siden"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => {
+                            if (searchResults.length > 0) {
+                                setIsResultsVisible(true);
+                            }
+                        }}
+                    />
+                    {isLoading && (
+                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                            <div className="animate-spin h-4 w-4 border-2 border-gray-500 border-t-transparent rounded-full" />
+                        </div>
+                    )}
+                </div>
+                
+                <AnimatePresence mode="wait">
+                    {isResultsVisible && (
+                        <SearchResults 
+                            results={searchResults} 
+                            isVisible={isResultsVisible} 
+                            onClose={() => setIsResultsVisible(false)} 
+                        />
+                    )}
+                </AnimatePresence>
+            </div>
         </header>
     );
 }
