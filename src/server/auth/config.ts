@@ -87,11 +87,11 @@ export const authConfig = {
 		verificationTokensTable: verificationTokens,
 	}),
 	callbacks: {
-		session: ({ session, user }) => ({
+		session: ({ session, token }) => ({
 			...session,
 			user: {
 				...session.user,
-				id: user.id,
+				id: token.id as string,
 			},
 		}),
 		jwt: ({ token, user }) => {
@@ -102,4 +102,9 @@ export const authConfig = {
 		},
 	},
 	secret: process.env.AUTH_SECRET,
+	session: {
+		strategy: "jwt",
+		maxAge: 30 * 24 * 60 * 60,
+		updateAge: 24 * 60 * 60,
+	},
 } satisfies NextAuthConfig;
